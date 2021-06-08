@@ -2,7 +2,6 @@ package com.kuzmin.taskmanagement.service;
 
 import com.kuzmin.taskmanagement.config.TestConfig;
 import com.kuzmin.taskmanagement.persistence.model.Project;
-import com.kuzmin.taskmanagement.service.IProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
