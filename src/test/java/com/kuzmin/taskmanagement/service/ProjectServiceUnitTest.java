@@ -28,7 +28,7 @@ public class ProjectServiceUnitTest {
 
     @Test
     public void whenSavingProject_thenOK() {
-        Project project = new Project(1L, "name", LocalDate.now());
+        Project project = new Project("name", LocalDate.now());
         when(projectRepository.save(project)).thenReturn(project);
 
         Project savedProject = projectService.save(project);
