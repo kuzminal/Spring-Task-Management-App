@@ -1,16 +1,20 @@
 package com.kuzmin.taskmanagement.persistence.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Getter
-public class Task {
+@Setter
+public class Task implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +30,14 @@ public class Task {
     private TaskStatus status;
 
     public Task() {
+    }
+
+    public Task(String name, String description, LocalDate dateCreated, LocalDate dueDate, TaskStatus status) {
+        this.name = name;
+        this.description = description;
+        this.dateCreated = dateCreated;
+        this.dueDate = dueDate;
+        this.status = status;
     }
 
     public Task(String name, String description, LocalDate dateCreated, LocalDate dueDate) {

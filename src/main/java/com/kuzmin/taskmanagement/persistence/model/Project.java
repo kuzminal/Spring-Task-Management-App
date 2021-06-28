@@ -2,9 +2,11 @@ package com.kuzmin.taskmanagement.persistence.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,7 +17,10 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Project {
+@Setter
+public class Project implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,6 +39,10 @@ public class Project {
     public Project(Project project) {
         this(project.getName(), project.getDateCreated());
         this.tasks = new HashSet<>(project.getTasks());
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override
