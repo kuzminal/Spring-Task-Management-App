@@ -28,19 +28,18 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    @Cacheable(value = "projects")
     public Iterable<Project> findAll() {
         return projectRepository.findAll();
     }
 
     @Override
-    @Cacheable("projects")
+    @Cacheable(value = "projects")
     public Optional<Project> findById(Long id) {
         return projectRepository.findById(id);
     }
 
     @Override
-    @CachePut(value = "projects", key = "#project.id")
+    @CachePut(value = "projects")
     public Project save(Project project) {
         return projectRepository.save(project);
     }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.kuzmin.taskmanagement.web.dto.ProjectDto;
 import com.kuzmin.taskmanagement.web.dto.TaskDto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +33,18 @@ public class ProjectController {
         return "projects";
     }
 
+    @GetMapping("/new")
+    public String newProject(Model model) {
+        model.addAttribute("project", new ProjectDto());
+        return "new-project";
+    }
+
+    @PostMapping
+    public String addProject(ProjectDto project) {
+        projectService.save(convertToEntity(project));
+        return "redirect:/projects";
+    }
+
     private ProjectDto convertToDto(Project entity) {
         ProjectDto dto = new ProjectDto(entity.getId(), entity.getName(), entity.getDateCreated());
         dto.setTasks(entity.getTasks()
@@ -47,10 +60,13 @@ public class ProjectController {
         if (!ObjectUtils.isEmpty(dto)) {
             project.setId(dto.getId());
             project.setName(dto.getName());
-            project.setTasks((dto.getTasks()
-                    .stream()
-                    .map(this::convertTaskToEntity)
-                    .collect(Collectors.toSet())));
+            project.setDateCreated(dto.getDateCreated() == null ? LocalDate.now() : dto.getDateCreated());
+            if (dto.getTasks() != null) {
+                project.setTasks((dto.getTasks()
+                        .stream()
+                        .map(this::convertTaskToEntity)
+                        .collect(Collectors.toSet())));
+            }
         }
         return project;
     }
