@@ -3,17 +3,18 @@ package com.kuzmin.taskmanagement.web.controller;
 import com.kuzmin.taskmanagement.persistence.model.Project;
 import com.kuzmin.taskmanagement.persistence.model.Task;
 import com.kuzmin.taskmanagement.service.IProjectService;
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import com.kuzmin.taskmanagement.web.dto.ProjectDto;
 import com.kuzmin.taskmanagement.web.dto.TaskDto;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping(value = "/projects")
 public class ProjectController {
     private IProjectService projectService;
@@ -22,22 +23,17 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping(path = "/{id}")
-    public ProjectDto findOne(@PathVariable Long id) {
-        Project entity = projectService.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return convertToDto(entity);
-    }
-
-    @PostMapping
-    public void create(@RequestBody ProjectDto newProject) {
-        Project entity = convertToEntity(newProject);
-        entity.setDateCreated(LocalDate.now());
-        this.projectService.save(entity);
+    @GetMapping
+    public String getProjects(Model model) {
+        Iterable<Project> projects = projectService.findAll();
+        List<ProjectDto> projectDtos = new ArrayList<>();
+        projects.forEach(p -> projectDtos.add(convertToDto(p)));
+        model.addAttribute("projects", projectDtos);
+        return "projects";
     }
 
     private ProjectDto convertToDto(Project entity) {
-        ProjectDto dto = new ProjectDto(entity.getId(), entity.getName());
+        ProjectDto dto = new ProjectDto(entity.getId(), entity.getName(), entity.getDateCreated());
         dto.setTasks(entity.getTasks()
                 .stream()
                 .map(this::convertTaskToDto)

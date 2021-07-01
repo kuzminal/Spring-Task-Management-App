@@ -1,5 +1,6 @@
 package com.kuzmin.taskmanagement.web.dto;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,12 +12,15 @@ public class ProjectDto {
 
     private Set<TaskDto> tasks;
 
+    private LocalDate dateCreated;
+
     public ProjectDto() {
     }
 
-    public ProjectDto(Long id, String name) {
+    public ProjectDto(Long id, String name, LocalDate dateCreated) {
         this.id = id;
         this.name = name;
+        this.dateCreated = dateCreated;
         this.tasks = new HashSet<>();
     }
 
@@ -34,6 +38,14 @@ public class ProjectDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDate getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDate dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public Set<TaskDto> getTasks() {
