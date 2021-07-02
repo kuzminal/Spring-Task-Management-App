@@ -3,11 +3,14 @@ package com.kuzmin.taskmanagement.web.dto;
 import com.kuzmin.taskmanagement.persistence.model.TaskStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class TaskDto {
     private Long id;
 
+    @NotBlank
     private String name;
 
     private String description;
@@ -16,6 +19,7 @@ public class TaskDto {
     private LocalDate dateCreated;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull
     private LocalDate dueDate;
 
     private TaskStatus status;

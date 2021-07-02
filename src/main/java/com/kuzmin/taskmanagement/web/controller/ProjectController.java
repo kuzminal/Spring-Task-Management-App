@@ -2,14 +2,18 @@ package com.kuzmin.taskmanagement.web.controller;
 
 import com.kuzmin.taskmanagement.persistence.model.Project;
 import com.kuzmin.taskmanagement.persistence.model.Task;
+import com.kuzmin.taskmanagement.persistence.model.TaskStatus;
 import com.kuzmin.taskmanagement.service.IProjectService;
+import com.kuzmin.taskmanagement.web.dto.TaskListDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.kuzmin.taskmanagement.web.dto.ProjectDto;
 import com.kuzmin.taskmanagement.web.dto.TaskDto;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +44,41 @@ public class ProjectController {
     }
 
     @PostMapping
-    public String addProject(ProjectDto project) {
+    public String addProject(@Valid @ModelAttribute("project") ProjectDto project, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "new-project";
+        }
         projectService.save(convertToEntity(project));
         return "redirect:/projects";
+    }
+
+    @GetMapping("/{id}")
+    public String getProject(@PathVariable Long id, Model model) {
+        Project project = projectService.findById(id)
+                .get();
+        model.addAttribute("project", convertToDto(project));
+        return "project";
+    }
+
+    @GetMapping("/{id}/add-task")
+    public String getProjectEditPage(@PathVariable Long id, Model model) {
+        Project project = projectService.findById(id)
+                .orElse(new Project());
+        model.addAttribute("project", project);
+        model.addAttribute("task", new TaskDto());
+        return "add-task";
+    }
+
+    @PostMapping("{id}/save-task")
+    //TODO Нужно победить валидацию
+    public String saveTasks(@ModelAttribute("task") TaskDto task, @PathVariable Long id, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/" + id + "/add-task";
+        }
+        Project project = projectService.findById(id)
+                .orElse(new Project());
+        projectService.addTask(project, convertTaskToEntity(task));
+        return "redirect:/projects/" + project.getId();
     }
 
     private ProjectDto convertToDto(Project entity) {
@@ -82,9 +118,17 @@ public class ProjectController {
             task.setId(dto.getId());
             task.setDescription(dto.getDescription());
             task.setName(dto.getName());
-            task.setDateCreated(dto.getDateCreated());
+            if (dto.getDateCreated() != null) {
+                task.setDateCreated(dto.getDateCreated());
+            } else {
+                task.setDateCreated(LocalDate.now());
+            }
             task.setDueDate(dto.getDueDate());
-            task.setStatus(dto.getStatus());
+            if (dto.getStatus() != null) {
+                task.setStatus(dto.getStatus());
+            } else {
+                task.setStatus(TaskStatus.TO_DO);
+            }
         }
         return task;
     }

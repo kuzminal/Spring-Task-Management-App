@@ -1,5 +1,6 @@
 package com.kuzmin.taskmanagement.web.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.Set;
 public class ProjectDto {
 
     private Long id;
-
+    @NotBlank
     private String name;
 
     private Set<TaskDto> tasks;

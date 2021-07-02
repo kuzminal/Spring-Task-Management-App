@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Project</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+</head>
+<body>
+	<div class="container ml-3 mt-3 ">
+		<h3>
+			Add New Tasks to Project <span th:text="${project.name}">Name</span>
+		</h3>
+
+		<div class="row">
+			<span class="col-md-4 card-header">Name</span>
+			<span class="col-md-4 card-header">Description</span>
+			<span class="col-md-2 card-header">Due Date</span>
+
+		</div>
+		<form th:action="@{/projects/{id}/save-task(id=${project.id})}"
+			th:object="${task}" method="post">
+			<div class="row">
+				<input th:field="${task.name}"
+					class="form-control col-md-4" placeholder="Task Name" />
+				<input th:field="${task.description}"
+					   class="form-control col-md-4" placeholder="Task Description" />
+				<input
+					th:field="${task.dueDate}"
+					class="form-control col-md-2" type="date" />
+			</div>
+			<input type="submit" th:value="Save" class="btn btn-primary mt-2">
+			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"/>
+		</form>
+	</div>
+</body>
+</html>

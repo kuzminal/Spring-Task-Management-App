@@ -18,7 +18,8 @@
         <tbody>
         <tr th:each="project : ${projects}">
             <td th:text="${project.id}"></td>
-            <td th:text="${project.name}"></td>
+            <td><a th:href="@{/projects/{id}(id=${project.id})}"
+                   th:text="${project.name}"></a></td>
             <td th:text="${project.dateCreated}"></td>
         </tr>
         </tbody>
