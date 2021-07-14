@@ -1,4 +1,4 @@
-package com.kuzmin.taskmanagement.web.dto;
+package com.kuzmin.taskmanagement.dto;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;

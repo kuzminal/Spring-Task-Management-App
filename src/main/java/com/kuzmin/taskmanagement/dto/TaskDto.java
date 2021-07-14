@@ -1,4 +1,4 @@
-package com.kuzmin.taskmanagement.web.dto;
+package com.kuzmin.taskmanagement.dto;
 
 import com.kuzmin.taskmanagement.persistence.model.TaskStatus;
 import org.springframework.format.annotation.DateTimeFormat;

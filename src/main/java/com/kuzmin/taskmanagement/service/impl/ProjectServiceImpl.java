@@ -46,4 +46,15 @@ public class ProjectServiceImpl implements IProjectService {
 
         return project;
     }
+
+    @Override
+    @Cacheable(value = "projects")
+    public Iterable<Project> findByName(String name) {
+        return projectRepository.findByName(name);
+    }
+
+    @Override
+    public void delete(Long id) {
+        projectRepository.deleteById(id);
+    }
 }

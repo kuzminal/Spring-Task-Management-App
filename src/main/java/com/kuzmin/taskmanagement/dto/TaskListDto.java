@@ -1,4 +1,4 @@
-package com.kuzmin.taskmanagement.web.dto;
+package com.kuzmin.taskmanagement.dto;
 
 import java.util.ArrayList;
 import java.util.List;

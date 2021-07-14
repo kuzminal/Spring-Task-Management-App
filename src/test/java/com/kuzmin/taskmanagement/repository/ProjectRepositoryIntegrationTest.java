@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +41,11 @@ public class ProjectRepositoryIntegrationTest {
     @Test
     public void givenProjectCreated_whenFindByName_thenSuccess() {
         Project newProject = new Project(randomAlphabetic(6), LocalDate.now());
+        Iterable<Project> newProjects = Arrays.asList(newProject);
         projectRepository.save(newProject);
 
-        Optional<Project> retreivedProject = projectRepository.findByName(newProject.getName());
-        assertEquals(retreivedProject.get(), newProject);
+        Iterable<Project> retreivedProject = projectRepository.findByName(newProject.getName());
+        assertEquals(retreivedProject, newProjects);
     }
 
     @Test

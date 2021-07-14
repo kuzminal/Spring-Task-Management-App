@@ -1,28 +1,24 @@
 package com.kuzmin.taskmanagement.web.controller;
 
+import com.kuzmin.taskmanagement.dto.DTOConverter;
 import com.kuzmin.taskmanagement.persistence.model.Project;
-import com.kuzmin.taskmanagement.persistence.model.Task;
-import com.kuzmin.taskmanagement.persistence.model.TaskStatus;
 import com.kuzmin.taskmanagement.service.IProjectService;
-import com.kuzmin.taskmanagement.web.dto.TaskListDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.kuzmin.taskmanagement.web.dto.ProjectDto;
-import com.kuzmin.taskmanagement.web.dto.TaskDto;
+import com.kuzmin.taskmanagement.dto.ProjectDto;
+import com.kuzmin.taskmanagement.dto.TaskDto;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/projects")
 public class ProjectController {
     private IProjectService projectService;
+    private final DTOConverter dtoConverter = new DTOConverter();
 
     public ProjectController(IProjectService projectService) {
         this.projectService = projectService;
@@ -32,7 +28,7 @@ public class ProjectController {
     public String getProjects(Model model) {
         Iterable<Project> projects = projectService.findAll();
         List<ProjectDto> projectDtos = new ArrayList<>();
-        projects.forEach(p -> projectDtos.add(convertToDto(p)));
+        projects.forEach(p -> projectDtos.add(dtoConverter.convertToDto(p)));
         model.addAttribute("projects", projectDtos);
         return "projects";
     }
@@ -48,7 +44,7 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return "new-project";
         }
-        projectService.save(convertToEntity(project));
+        projectService.save(dtoConverter.convertToEntity(project));
         return "redirect:/projects";
     }
 
@@ -56,7 +52,7 @@ public class ProjectController {
     public String getProject(@PathVariable Long id, Model model) {
         Project project = projectService.findById(id)
                 .get();
-        model.addAttribute("project", convertToDto(project));
+        model.addAttribute("project", dtoConverter.convertToDto(project));
         return "project";
     }
 
@@ -77,59 +73,7 @@ public class ProjectController {
         }
         Project project = projectService.findById(id)
                 .orElse(new Project());
-        projectService.addTask(project, convertTaskToEntity(task));
+        projectService.addTask(project, dtoConverter.convertTaskToEntity(task));
         return "redirect:/projects/" + project.getId();
-    }
-
-    private ProjectDto convertToDto(Project entity) {
-        ProjectDto dto = new ProjectDto(entity.getId(), entity.getName(), entity.getDateCreated());
-        dto.setTasks(entity.getTasks()
-                .stream()
-                .map(this::convertTaskToDto)
-                .collect(Collectors.toSet()));
-
-        return dto;
-    }
-
-    private Project convertToEntity(ProjectDto dto) {
-        Project project = new Project();
-        if (!ObjectUtils.isEmpty(dto)) {
-            project.setId(dto.getId());
-            project.setName(dto.getName());
-            project.setDateCreated(dto.getDateCreated() == null ? LocalDate.now() : dto.getDateCreated());
-            if (dto.getTasks() != null) {
-                project.setTasks((dto.getTasks()
-                        .stream()
-                        .map(this::convertTaskToEntity)
-                        .collect(Collectors.toSet())));
-            }
-        }
-        return project;
-    }
-
-    protected TaskDto convertTaskToDto(Task entity) {
-        TaskDto dto = new TaskDto(entity.getId(), entity.getName(), entity.getDescription(), entity.getDateCreated(), entity.getDueDate(), entity.getStatus());
-        return dto;
-    }
-
-    protected Task convertTaskToEntity(TaskDto dto) {
-        Task task = new Task();
-        if (!ObjectUtils.isEmpty(dto)) {
-            task.setId(dto.getId());
-            task.setDescription(dto.getDescription());
-            task.setName(dto.getName());
-            if (dto.getDateCreated() != null) {
-                task.setDateCreated(dto.getDateCreated());
-            } else {
-                task.setDateCreated(LocalDate.now());
-            }
-            task.setDueDate(dto.getDueDate());
-            if (dto.getStatus() != null) {
-                task.setStatus(dto.getStatus());
-            } else {
-                task.setStatus(TaskStatus.TO_DO);
-            }
-        }
-        return task;
     }
 }
