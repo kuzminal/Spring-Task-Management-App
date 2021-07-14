@@ -1,31 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Projects</title>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<title>Learn Spring | Mustache Template Engine</title>
 </head>
 <body>
-    <table class="table col-md-6 ml-3">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Date Created</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="project : ${projects}">
-            <td th:text="${project.id}"></td>
-            <td><a th:href="@{/projects/{id}(id=${project.id})}"
-                   th:text="${project.name}"></a></td>
-            <td th:text="${project.dateCreated}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <p>
-        <a th:href="@{/projects/new}" class="btn btn-link">New Project</a>
-    </p>
+    <div class="container">
+        <div class="col-sm-5">
+            {{#projects}}
+                <h1>{{name}}</h1>
+                Tasks:
+                <ol>
+                    {{#tasks}}
+                        <li>{{name}}: {{description}}</li>
+                    {{/tasks}}
+                </ol>
+            {{/projects}}
+        </div>
+    </div>
 </body>
 </html>
