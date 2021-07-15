@@ -1,8 +1,11 @@
 package com.kuzmin.taskmanagement.web.controller;
 
 import com.kuzmin.taskmanagement.dto.DTOConverter;
+import com.kuzmin.taskmanagement.events.ProjectCreatedEvent;
 import com.kuzmin.taskmanagement.persistence.model.Project;
 import com.kuzmin.taskmanagement.service.IProjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +22,8 @@ import java.util.List;
 public class ProjectController {
     private IProjectService projectService;
     private final DTOConverter dtoConverter = new DTOConverter();
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     public ProjectController(IProjectService projectService) {
         this.projectService = projectService;
@@ -44,7 +49,8 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return "new-project";
         }
-        projectService.save(dtoConverter.convertToEntity(project));
+        Project newProject = projectService.save(dtoConverter.convertToEntity(project));
+        publisher.publishEvent(new ProjectCreatedEvent(newProject.getId()));
         return "redirect:/projects";
     }
 
