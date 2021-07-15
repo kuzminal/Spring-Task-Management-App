@@ -32,7 +32,7 @@ public class ProjectPagingAndSortingTest {
     public void givenDataCreated_whenFindAllSort_thenSuccess() {
         List<Project> retrievedProjects = (List<Project>) projectRepository.findAll(Sort.by(Sort.Order.asc("name")));
 
-        List<Project> sortedProjects = new ArrayList<>(retrievedProjects);
+        List<Project> sortedProjects = retrievedProjects;
         sortedProjects.sort(Comparator.comparing(Project::getName));
 
         assertEquals(sortedProjects, retrievedProjects);

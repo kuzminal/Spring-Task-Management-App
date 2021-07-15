@@ -1,14 +1,13 @@
 package com.kuzmin.taskmanagement.properties;
 
-import com.kuzmin.taskmanagement.TaskManagementApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringJUnitConfig(value = TaskManagementApplication.class)
+@SpringBootTest
 @TestPropertySource(locations = "classpath:test.properties")
 public class TestPropertySourceTest {
     @Value("${testproperty}")

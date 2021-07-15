@@ -51,7 +51,7 @@ public class Project implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Project project = (Project) o;
 
-        return id != null && id.equals(project.id);
+        return id != null && id.equals(project.id) && name.equals(project.name);
     }
 
     @Override

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS taskmanager.project
+CREATE TABLE IF NOT EXISTS project
 (
     id           SERIAL       NOT NULL,
     name         VARCHAR(128) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS taskmanager.project
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS taskmanager.task
+CREATE TABLE IF NOT EXISTS task
 (
     id           SERIAL       NOT NULL,
     name         VARCHAR(128) NOT NULL,

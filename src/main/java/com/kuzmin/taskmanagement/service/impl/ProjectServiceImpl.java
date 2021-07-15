@@ -7,6 +7,7 @@ import com.kuzmin.taskmanagement.service.IProjectService;
 import com.kuzmin.taskmanagement.service.ITaskService;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
+    @PreAuthorize("hasRole('MANAGER')")
     public Iterable<Project> findAll() {
         return projectRepository.findAll();
     }
